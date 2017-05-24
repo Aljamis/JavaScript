@@ -1,0 +1,53 @@
+<!DOCTYTPE html>
+<html>
+<head>
+	
+	<style>
+		#myCanvas {  border:10px solid #dddddd ; }
+	</style>
+
+	<title>Tic Tac Toe</title>
+	
+	<script src="TicTacToe.js"></script>
+</head>
+<body>
+<h1>Tic Tac Toe</h1>
+	<!-- canvas id="tutorial" width="300" , height="300" style="border:10px solid #000000"  -->
+	<canvas id="myCanvas" width="300" , height="300">
+		Your canvas is here
+	</canvas>
+<h2 id="whosTurn">The Canvas ENDs</h2>
+
+<!-- button id"DispArray" onclick="displayArray()">Display Array< / button -->
+
+
+	<script>
+		drawBoard();
+		
+		/* How var offset is the Canvas on the screen? */
+		var c          = document.getElementById("myCanvas") ,
+		    elemLeft   = c.offsetLeft ,
+			elemTop    = c.offsetTop
+		;
+		
+		c.addEventListener('click' , function(event) {
+			var x = event.pageX - 10 - elemLeft ,
+			    y = event.pageY - 10 - elemTop ;
+			// console.log(" X:"+ x +"  y:"+ y +"          OFFSET "+ elemLeft +":"+ elemTop);  
+			
+			var col = Math.floor(x/100) ,
+			    row = Math.floor(y/100) ;
+			// console.log(" row :"+ row +"   col:"+ col);
+			
+			//fillInSquare( row, col);
+			playAturn( row , col );
+			
+		});
+		
+		var gameMsg = document.getElementById("whosTurn");
+		gameMsg.innerHTML = CURRENT_PLAYER +"'s turn";
+	</script>
+
+
+</body>
+<html>
