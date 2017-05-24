@@ -42,11 +42,11 @@ function displayArray() {
 
 
 /*  Process a turn :  
-	   - If the game is won, retrurn. 
+       - If the game is won, retrurn. 
        - Is the cell empty?
-	      - Draw the shape
-	   - Is this a winning move?
-	   - Toggle to the next player
+           - Draw the shape
+       - Is this a winning move?
+       - Toggle to the next player
  */ 
 function playAturn( row , col ) {
 	if ( GAME_IS_WON ) return;
