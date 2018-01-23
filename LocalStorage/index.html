@@ -1,0 +1,144 @@
+<!doctype html>
+<html ng-app>
+  <head>
+    <script>
+	
+	  var storedChecks = [];
+	  
+	  function storeInput() {
+	    if ( !validate() ) return;
+		
+		alert("Passed Validation");
+		
+		var transDate = document.getElementById("transactionDate").value;
+		var payee = document.getElementById("payee").value;
+		var amount = document.getElementById("amount").value;
+		
+		var chkBkCurrentSize = localStorage.length;
+		
+		var toString = transDate + ";" + payee + ";" + amount;
+		
+		localStorage.setItem("CheckBook" + (chkBkCurrentSize +1), toString );
+	  }
+	  
+	  
+	  function traverseLocalStorage() {
+		var idx = 0;
+		for ( idx = 0 ; idx < localStorage.length ; idx++) {
+		  var KEY = localStorage.key(idx);
+		  //alert(KEY + " : "+ localStorage.getItem(KEY) );
+		  if ( KEY.startsWith( "CheckBook" ) ) {
+				populateLocalTable( localStorage.getItem(KEY) , idx );
+		  }
+		}
+		
+//		alert( storedChecks.length +" elements ");
+//		alert( storedChecks[0].payee );
+		
+		sortChecks();
+//		alert( storedChecks[0].payee );
+		populateTable();
+	  }
+	  
+	  
+	  
+	  function populateLocalTable( check , rowIdx ) {
+		var elements = check.split(";");
+		var newCheck = { txDate: elements[0] , payee: elements[1] , amount: elements[2] };
+		storedChecks.push( newCheck );
+	  }
+	  
+	  
+	  // Populate the HTML table
+	  function populateTable() {
+		var checkRegister = document.getElementById("theRegister");
+		for (idx = 0 ; idx < storedChecks.length ; idx++ ) {
+			var row = checkRegister.insertRow(idx +1);
+			
+			var cell0 = row.insertCell(0);
+			var cell1 = row.insertCell(1);
+			var cell2 = row.insertCell(2);
+			
+			cell0.innerHTML = storedChecks[idx].txDate;
+			cell1.innerHTML = storedChecks[idx].payee;
+			cell2.innerHTML = storedChecks[idx].amount;
+			cell2.align = "right";
+			cell1.style = "text-align:center";
+		}
+	  }
+	  
+	  
+	  // Sort the collection by date .. but using date as a 
+	  //    String
+	  function sortChecks() {
+		storedChecks.sort( function (a , b) {
+			//  Sort by date as a String
+			//return a.txDate.localeCompare(b.txDate);
+			
+			//  Sort by date as a Date
+			var d1 = new Date(a.txDate);
+			var d2 = new Date(b.txDate);
+			return d1 > d2;
+		});
+	  }
+	  
+	  /*  Required input fields :  DATE, PAYEE, Amout
+	   *  Convert Amount into a Decimal
+ 	   */
+	  function validate() {
+		var transDate = document.getElementById("transactionDate").value;
+		var payee = document.getElementById("payee").value;
+		var amount = document.getElementById("amount").value;
+		
+		var errorMessage = "";
+		
+		if ( !transDate ) {
+		  errorMessage += "\nMissing Transaction Date "+ transDate;
+		}
+		if ( !payee ) {
+		  errorMessage += "\nMissing Payee";
+		}
+		if ( !amount ) {
+		  errorMessage += "\nMissing Amount";
+		}
+		
+		var amountDecimal = parseFloat(amount).toFixed(2);
+		if (!amountDecimal  ||  isNaN( amountDecimal ) ) {
+		  errorMessage += "\nAmount is not a number";
+		}
+		
+		if (errorMessage) {
+		  alert( errorMessage );
+		  return 0;
+		}
+		return 1;
+	  }
+	  
+	</script>
+  </head>
+  <body>
+    <div>
+	  
+      <p><label>Date:</label>
+      <input type="date" id="transactionDate" /></p>
+	  <input type="text" id="payee" placeholder="Pay To" maxlength="80" size="80"/>&nbsp;&nbsp;&nbsp;
+	  <input type="text" id="amount" placeholder="Amount" maxlength="20" size="10" align="right"/>
+	  
+	  <p><button onclick="storeInput()">Click me</button></p>
+	  <p><input id="add" type="submit" value="Traverse Local Storage"  onclick="traverseLocalStorage()" /></p>
+      <hr>
+	  
+	  
+	  <table id="theRegister" border="1">
+		<col span="1" style="width: 25%;">
+		<col span="1" style="width: 50%;">
+		<col span="1" style="width: 25%;">
+		<tr><th>Date</th>
+		    <th>Payee</th>
+		    <th>Amount</th>
+		</tr>
+	  </table>
+	  
+    </div>
+  </body>
+</html>
